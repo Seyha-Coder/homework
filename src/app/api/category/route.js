@@ -21,24 +21,15 @@ export async function GET(){
 }
 export async function POST(req, res) {
     try {
-        const categories = await req.json();
-
-        const createdCategories = [];
-        for (const categoryData of categories) {
-            const { category_name } = categoryData;
-            const newCategory = await prisma.categories.create({
-                data: {
-                    category_name
-                }
-            });
-            createdCategories.push(newCategory);
-        }
-
+        const category_name = await req.json();
+        const newCategory = await prisma.categories.createMany({
+            data: category_name
+        });
+           
         return NextResponse.json({
             status: 201,
             message: "Categories have been created successfully.",
-            count: createdCategories.length,
-            payload: createdCategories
+            payload: newCategory
         });
     } catch (error) {
         console.error("Error creating categories:", error);

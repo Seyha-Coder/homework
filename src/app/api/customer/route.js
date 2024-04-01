@@ -22,25 +22,16 @@ export async function GET(){
 
 export async function POST(req, res){
     try {
-        const customers = await req.json();
-        const createCustmers = [];
-        for(const customerData of customers ){
-            const {first_name,last_name,birth_date,money_spent} = customerData;
+        
+            const data = await req.json();
             const newCus = await prisma.customers.create({
-                data:{
-                    first_name,
-                    last_name,
-                    birth_date,
-                    money_spent
-                },
+                data:data
             })
-            createCustmers.push(newCus);
-        }
+            
         return NextResponse.json({
             status: 201,
             message: "Customer has already created.",
-            count: createCustmers.length,
-            payload: createCustmers
+            payload: newCus
         })
     } catch (error) {
         return NextResponse.json({
